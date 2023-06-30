@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">SmartControl</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="cancel">Cancel</string>
+    <!-- bluetooth -->
+    <string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Devices</string>
+    <string name="none_paired">No devices have been paired</string>
+    <string name="none_found">No devices found</string>
+    <string name="device_scan">Scan...</string>
+    <string name="device_scan_finish">Scan finish.</string>
+    <string name="bluetooth_setting">Printer Config</string>
+    <string name="select_device">select a device to connect</string>
+    <string name="bt_not_enabled_leaving">Bluetooth is not enabled, leaving chat...</string>
+    <string name="bluetooth_unable_to_connect_printer">Unable to connect printer. Please check if the printer is
+    ready.
+    </string>
+    <string name="button_scan">Re-Scan</string>
+</resources>
