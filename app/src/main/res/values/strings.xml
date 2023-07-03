@@ -26,4 +26,6 @@
     ready.
     </string>
     <string name="button_scan">Re-Scan</string>
+
+    <string name="pairing_request">PAIRING requested\n-> Perform pairing steps. Connect again</string>
 </resources>

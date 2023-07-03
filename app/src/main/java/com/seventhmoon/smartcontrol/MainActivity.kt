@@ -16,6 +16,7 @@ import android.os.Message
 import android.util.Log
 import android.view.Gravity
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.material.snackbar.Snackbar
@@ -56,6 +57,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var mContext: Context? = null
     private var toastHandle: Toast? = null
+
+    private var menuItemBluetoothScan: MenuItem? = null
+
     companion object {
         @JvmStatic var screenWidth: Int = 0
         @JvmStatic var screenHeight: Int = 0
@@ -105,6 +109,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
+        menuItemBluetoothScan = menu.findItem(R.id.action_settings)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.action_settings -> {
+                Log.e(mTAG, "action_settings")
+                openSomeActivityForResult()
+                //val intent = Intent(this, DeviceListActivity::class.java)
+                //intent.putExtra("SET_DEV", setPrinterDev)
+                //startActivityForResult(intent, setPrinterDev)
+            }
+        }
+
         return true
     }
 
@@ -119,8 +140,11 @@ class MainActivity : AppCompatActivity() {
 
         val bluetoothPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
 
+        val bluetoothScanPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN)
+
         var bluetoothConnect = 0
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Log.e(mTAG, "Build.VERSION.SDK_INT >= Build.VERSION_CODES.S")
             bluetoothConnect = ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
         }
 
@@ -132,6 +156,10 @@ class MainActivity : AppCompatActivity() {
 
         if (bluetoothPermission != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.BLUETOOTH)
+        }
+
+        if (bluetoothScanPermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.BLUETOOTH_SCAN)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -176,6 +204,7 @@ class MainActivity : AppCompatActivity() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     perms[Manifest.permission.BLUETOOTH_CONNECT] = PackageManager.PERMISSION_GRANTED
                 }
+                perms[Manifest.permission.BLUETOOTH_SCAN] = PackageManager.PERMISSION_GRANTED
 
                 // Fill with actual results from user
                 //if (grantResults.size > 0) {
@@ -189,6 +218,7 @@ class MainActivity : AppCompatActivity() {
                     if (perms[Manifest.permission.BLUETOOTH_ADMIN] == PackageManager.PERMISSION_GRANTED
                         && perms[Manifest.permission.BLUETOOTH] == PackageManager.PERMISSION_GRANTED
                         && perms[Manifest.permission.BLUETOOTH_CONNECT] == PackageManager.PERMISSION_GRANTED
+                        && perms[Manifest.permission.BLUETOOTH_SCAN] == PackageManager.PERMISSION_GRANTED
                     ) {
                         Log.d(mTAG, "write permission granted")
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -228,7 +258,10 @@ class MainActivity : AppCompatActivity() {
                                 this,
                                 Manifest.permission.BLUETOOTH_CONNECT
                             )
-
+                            || ActivityCompat.shouldShowRequestPermissionRationale(
+                                this,
+                                Manifest.permission.BLUETOOTH_SCAN
+                            )
                         ) {
                             showDialogOK { _, which ->
                                 when (which) {
@@ -333,7 +366,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-
+        Log.e(mTAG, "result.resultCode = $result.resultCode")
         when (currentRequestCode) {
             requestConnectDeviceSecure -> {
                 Log.e(mTAG, "requestConnectDeviceSecure")
@@ -593,7 +626,8 @@ class MainActivity : AppCompatActivity() {
         if (currentRequestCode == requestEnableBt) {
             val intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             resultLauncher.launch(intent)
-        } else if (currentRequestCode == setPrinterDev) {
+        //} else if (currentRequestCode == setPrinterDev) {
+        } else {
             val intent = Intent(this, DeviceListActivity::class.java)
             intent.putExtra("SET_DEV", setPrinterDev)
             resultLauncher.launch(intent)
